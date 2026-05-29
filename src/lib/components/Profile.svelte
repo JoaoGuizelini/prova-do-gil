@@ -3,12 +3,10 @@
   import { fetchLoggedUser, type RandomUser } from '../api/user.service';
     import { random } from '../utils/random';
 
-  // ── Reactive state ────────────────────────────────────────────────────────
   let user    = $state<RandomUser | null>(null);
   let loading = $state(true);
   let error   = $state<string | null>(null);
 
-  // ── Deterministic stats from user seed ───────────────────────────────────
   let stats = $derived(
     user
       ? {
@@ -19,7 +17,6 @@
       : { posts: 0, followers: '0', following: '0' }
   );
 
-  // ── Fetch on mount ────────────────────────────────────────────────────────
   onMount(async () => {
     try {
       user = await fetchLoggedUser();

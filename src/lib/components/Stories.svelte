@@ -2,14 +2,12 @@
   import { onMount } from 'svelte';
   import StoriesItem from './StoriesItem.svelte';
   import { fetchUsers, type RandomUser } from '../api/user.service';
-    import { random } from '../utils/random';
+  import { random } from '../utils/random';
 
-  // ── Reactive state ────────────────────────────────────────────────────────
   let users   = $state<RandomUser[]>([]);
   let loading = $state(true);
   let error   = $state<string | null>(null);
 
-  // ── Fetch on mount ────────────────────────────────────────────────────────
   onMount(async () => {
     try {
       users = await fetchUsers(random(2,8));

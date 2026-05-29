@@ -1,5 +1,4 @@
 <script lang="ts">
-  // ── Reactive state ────────────────────────────────────────────────────────
   let active = $state('Feed');
 
   const items = [

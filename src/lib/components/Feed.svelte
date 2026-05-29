@@ -3,8 +3,8 @@
   import FeedItem from './FeedItem.svelte';
   import { fetchRandomPhotos, sizedUrl, type PicsumPhoto } from '../api/phto.service';
   import { fetchUsers, type RandomUser } from '../api/user.service';
+    import { URL_PHOTO } from '../api/urls';
 
-  // ── Reactive state ─────────────────────────────────────────────────────────
   let photos     = $state<PicsumPhoto[]>([]);
   let users      = $state<RandomUser[]>([]);
   let loading    = $state(true);
@@ -12,7 +12,6 @@
   let error      = $state<string | null>(null);
   let activeTab  = $state<'latest' | 'popular'>('latest');
 
-  // ── Derived: combine photos + users into feed items ───────────────────────
   let feedItems = $derived(
     photos.map((photo, i) => {
       const user = users[i % (users.length || 1)];
@@ -21,28 +20,25 @@
         id:         photo.id,
         imageUrl:   sizedUrl(photo.id, 600, 400),
         userName:   user ? user.name.first : photo.author.split(' ')[0],
-        userAvatar: user?.picture.medium ?? `https://picsum.photos/seed/${photo.id}/50/50`,
+        userAvatar: user?.picture.medium ?? URL_PHOTO + `seed/${photo.id}/50/50`,
         likes:      (seed * 7)  % 490 + 10,
         comments:   (seed * 13) % 390 + 5,
       };
     })
   );
 
-  // ── Derived: sorted by active tab ─────────────────────────────────────────
   let displayed = $derived(
     activeTab === 'latest'
       ? [...feedItems].sort((a, b) => parseInt(b.id) - parseInt(a.id))
       : [...feedItems].sort((a, b) => b.likes - a.likes)
   );
 
-  // ── Shared load function (mount + refresh button) ─────────────────────────
   async function loadFeed(isRefresh = false) {
     if (isRefresh) refreshing = true;
     else loading = true;
     error = null;
 
     try {
-      // fetchRandomPhotos picks a random page → different images every call
       [photos, users] = await Promise.all([
         fetchRandomPhotos(4),
         fetchUsers(4),
@@ -55,7 +51,6 @@
     }
   }
 
-  // ── Fetch on mount ────────────────────────────────────────────────────────
   onMount(() => loadFeed());
 </script>
 

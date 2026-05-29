@@ -9,9 +9,8 @@
 
   let { imageUrl, userName, userAvatar, likes, comments }: Props = $props();
 
-  // ── Reactive state ────────────────────────────────────────────────────────
   let liked        = $state(false);
-  let currentLikes = $state(likes); // cópia local para não mutar a prop
+  let currentLikes = $state(likes);
 
   function toggleLike() {
     liked        = !liked;
@@ -31,7 +30,6 @@
     </div>
 
     <div class="actions">
-      <!-- Like button -->
       <button
         class="action like-btn"
         class:is-liked={liked}
@@ -49,7 +47,6 @@
         <span class="count">{currentLikes}</span>
       </button>
 
-      <!-- Comments (display only) -->
       <span class="action">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
